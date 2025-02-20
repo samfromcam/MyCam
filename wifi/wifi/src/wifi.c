@@ -17,6 +17,9 @@ volatile bool wifi_comm_success = false;
 volatile uint32_t transfer_index = 0;
 volatile uint32_t transfer_len = 0;
 
+volatile uint8_t buff_array[100];
+volatile uint8_t provision_flag = 0;
+
 void wifi_usart_handler(void) {
 	// Handler for incoming data from the WiFi. Should call process incoming byte wifi when a new byte arrives.
 	uint32_t ul_status;
@@ -33,8 +36,10 @@ void wifi_usart_handler(void) {
 }
 
 void process_incoming_byte_wifi(uint8_t in_byte) {
-	// Stores every incoming byte (in byte) from the ESP32 in a buffer.
-
+	// Stores every incoming byte (in_byte) from the ESP32 in a buffer.
+	// in_byte is one byte
+	// append to array
+	buff_array[transfer_index] = in_byte;
 }
 
 void wifi_command_response_handler(uint32_t ul_id, uint32_t ul_mask) {
@@ -58,7 +63,11 @@ void process_data_wifi(void) {
 
 void wifi_provision_handler(uint32_t ul_id, uint32_t ul_mask) {
 	// Handler for button to initiate provisioning mode of the ESP32. Should set a flag indicating a request to initiate provisioning mode.
-
+	// WIFI_PROVISIONING pin is button
+	// when low set flag as true 
+	if (WIFI_PROVISIONING == 0) {
+		provision_flag = 1;
+	}
 }
 
 void wifi_spi_handler(void) {
@@ -130,7 +139,10 @@ void configure_wifi_comm_pin(void) {
 
 void configure_wifi_provision_pin(void) {
 	// Configuration of button interrupt to initiate provisioning mode.
-
+	// if flag then interrupt
+	// This configures the ESP32 as an access point with SSID “ESD1 XY”, where X is the fifth byte of the MAC address and Y is the 
+	// sixth byte of the MAC address
+	
 }
 
 void configure_spi(void) {
@@ -170,7 +182,8 @@ void prepare_spi_transfer(void) {
 
 void write_wifi_command(char* comm, uint8_t cnt) {
 	// Writes a command (comm) to the ESP32, and waits either for an acknowledgment (via the “command complete” pin)
-	// or a timeout. The timeout can be created by setting the global variable counts to zero, which will automatically increment every second, and waiting while counts < cnt.
+	// or a timeout. The timeout can be created by setting the global variable counts to zero, which will automatically increment every second, 
+	// and waiting while counts < cnt.
 
 }
 

@@ -13,9 +13,8 @@ WIFI GPIO 21 -> MCU PA21
 WIFI GPIO 22 -> MCU PA22
 WIFI GPIO 23 -> MCU PA8
 WIFI GPIO 32 -> MCU PA9
-WIFI Reset -> MCU PA19 (currently disconnected for testing)
-MCU Reset Button -> MCU PA10 (bottom button on breakout board)
-WIFI Setup Button -> MCU PA18 (top button on breakout board)
+WIFI Reset -> MCU PA19
+Provisioning Button -> MCU PA18
 
 GPIOs 15 (RX) and 13 (TX) of the WIFI to PA6 and PA5 on MCU (TXD0 and RXD0)
 GPIOs 19 (SPCK), 17 (MISO), 18 (MOSI), and 16 (CS) of the WIFI to PA14, PA12, PA13, PA11 on the MCU (SCK0, MISO, MOSI, NPCS0)
@@ -33,8 +32,8 @@ GPIOs 19 (SPCK), 17 (MISO), 18 (MOSI), and 16 (CS) of the WIFI to PA14, PA12, PA
 #define WIFI_GPIO_23	PIO_PA8
 #define WIFI_GPIO_32	PIO_PA9
 // WIFI reset / setup pins:
-#define WIFI_RESET		PIO_PA19
-#define WIFI_SETUP		PIO_PA18
+#define WIFI_RESET			PIO_PA19
+#define WIFI_PROVISIONING	PIO_PA18
 
 // WIFI UART parameters:
 #define WIFI_USART					USART0
@@ -107,6 +106,9 @@ volatile bool wifi_comm_success;
 
 volatile uint32_t transfer_index;
 volatile uint32_t transfer_len;
+
+volatile uint8_t buff_array[0];
+volatile uint8_t provision_flag = 0;
 
 // WIFI function definitions:
 void wifi_usart_handler(void);
