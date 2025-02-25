@@ -30,8 +30,8 @@ GPIOs 19 (SPCK), 17 (MISO), 18 (MOSI), and 16 (CS) of the WIFI to PA14, PA12, PA
 // WIFI control pins:
 #define COMMAND_COMPLETE	PIO_PA21	// command complete pin, WIFI_GPIO_21
 #define WIFI_GPIO_22		PIO_PA22
-#define WIFI_GPIO_23		PIO_PA8
-#define WIFI_GPIO_32		PIO_PA9
+#define WIFI_GPIO_23		PIO_PA8 // CONNECTION PIN
+#define WIFI_GPIO_32		PIO_PA9 // CLIENT PIN 
 // WIFI reset / setup pins:
 #define WIFI_RESET			PIO_PA19
 

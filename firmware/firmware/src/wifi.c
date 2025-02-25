@@ -100,7 +100,7 @@ void wifi_provision_handler(uint32_t ul_id, uint32_t ul_mask) { //
 	// Handler for button to initiate provisioning mode of the ESP32. Should set a flag indicating a request to initiate provisioning mode.
 	// WIFI_PROVISIONING pin is button
 	// when low set flag as true 
-	if (WIFI_PROVISIONING == 0) {
+	if (WIFI_PROVIS_PIN_NUM == 0) {
 		provision_flag = 1;
 	}
 }
@@ -225,9 +225,10 @@ void write_wifi_command(char* comm, uint8_t cnt) { //
 	
 	usart_write_line(WIFI_USART,comm); // write command
 	// wait for acknowledgment or timeout 
+	counts = 0;
 	while counts < cnt {
 		if COMMAND_COMPLETE == 1 {
-			return();
+			return;
 		}
 	}
 }
@@ -240,10 +241,12 @@ void write_image_to_web(void) { //
 	// 3. The ESP32 will then set the ?command complete? pin low and begin transferring the image over SPI.
 	// 4. After the image is done sending, the ESP32 will set the ?command complete? pin high. The MCU should sense this and then move on.
 	if transfer_len == 0 {
-		return();
+		return;
 	}
 	else {
 		prepare_spi_transfer()
-		write_wifi_command("image transfer xxxx",1);		
+		char* transfer_message;
+		sprintf(transfer_message, "image transfer %i\n", transfer_len);
+		write_wifi_command(transfer_message,1);		
 	}
 }
