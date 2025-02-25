@@ -125,6 +125,12 @@
 // From module: Part identification macros
 #include <parts.h>
 
+// From module: RTC - Real Time Clock
+#include <rtc.h>
+
+// From module: RTT - Real Time Timer
+#include <rtt.h>
+
 // From module: SD/MMC stack on SPI interface
 #include <sd_mmc.h>
 
@@ -144,6 +150,9 @@
 
 // From module: System Clock Control - SAM4S implementation
 #include <sysclk.h>
+
+// From module: TC - Timer Counter
+#include <tc.h>
 
 // From module: UART - Univ. Async Rec/Trans
 #include <uart.h>

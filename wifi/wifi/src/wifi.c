@@ -14,13 +14,48 @@ volatile bool new_rx_wifi = false;
 volatile unsigned int input_pos_wifi = 0;
 volatile bool wifi_comm_success = false;
 
-volatile uint32_t byte_num = 0;
-
 volatile uint32_t transfer_index = 0;
 volatile uint32_t transfer_len = 0;
 
-volatile uint8_t buff_array[100];
 volatile uint8_t provision_flag = 0;
+
+void TC0_Handler(void)
+{
+	uint32_t ul_status;
+
+	// Read TC0 status.
+	ul_status = tc_get_status(TC0, 0);
+
+	// RC compare.
+	if ((ul_status & TC_SR_CPCS) == TC_SR_CPCS) {
+		counts++;
+	}
+}
+
+void configure_tc(void)
+{
+	uint32_t ul_div;
+	uint32_t ul_tcclks;
+	uint32_t ul_sysclk;
+
+	// Get system clock.
+	ul_sysclk = sysclk_get_cpu_hz();
+
+	// Configure PMC.
+	pmc_enable_periph_clk(ID_TC0);
+
+	// Configure TC for a 1Hz frequency and trigger on RC compare.
+	tc_find_mck_divisor(TC_FREQ, ul_sysclk, &ul_div, &ul_tcclks, ul_sysclk);
+	tc_init(TC0, 0, ul_tcclks | TC_CMR_CPCTRG);
+	tc_write_rc(TC0, 0, (ul_sysclk / ul_div) / TC_FREQ);
+
+	// Configure and enable interrupt on RC compare.
+	NVIC_EnableIRQ((IRQn_Type) ID_TC0);
+	tc_enable_interrupt(TC0, 0, TC_IER_CPCS);
+	
+	// Start the timer
+	tc_start(TC0, 0);
+}
 
 void wifi_usart_handler(void) {
 	// Handler for incoming data from the WiFi. Should call process incoming byte wifi when a new byte arrives.
@@ -37,12 +72,9 @@ void wifi_usart_handler(void) {
 	}
 }
 
-void process_incoming_byte_wifi(uint8_t in_byte) { //
+void process_incoming_byte_wifi(uint8_t in_byte) {
 	// Stores every incoming byte (in_byte) from the ESP32 in a buffer.
-	// in_byte is one byte
-	// append to array
-	buff_array[byte_num] = in_byte;
-	byte_num++;
+	input_line_wifi[input_pos_wifi++] = in_byte;
 }
 
 void wifi_command_response_handler(uint32_t ul_id, uint32_t ul_mask) {
@@ -64,7 +96,7 @@ void process_data_wifi(void) {
 	}
 }
 
-void wifi_provision_handler(uint32_t ul_id, uint32_t ul_mask) {
+void wifi_provision_handler(uint32_t ul_id, uint32_t ul_mask) { //
 	// Handler for button to initiate provisioning mode of the ESP32. Should set a flag indicating a request to initiate provisioning mode.
 	// WIFI_PROVISIONING pin is button
 	// when low set flag as true 
@@ -145,7 +177,10 @@ void configure_wifi_provision_pin(void) { //
 	// if flag then interrupt
 	// This configures the ESP32 as an access point with SSID “ESD1 XY”, where X is the fifth byte of the MAC address and Y is the 
 	// sixth byte of the MAC address
-	NVIC_EnableIRQ();
+	pmc_enable_periph_clk(WIFI_PROVIS_ID);
+	pio_handler_set(WIFI_PROVIS_PIO, WIFI_PROVIS_ID, WIFI_PROVIS_PIN_NUM, WIFI_PROVIS_ATTR, wifi_command_response_handler);
+	NVIC_EnableIRQ((IRQn_Type)WIFI_PROVIS_ID);
+	pio_enable_interrupt(WIFI_PROVIS_PIO, WIFI_PROVIS_PIN_NUM);
 }
 
 void configure_spi(void) {
@@ -190,11 +225,10 @@ void write_wifi_command(char* comm, uint8_t cnt) { //
 	
 	usart_write_line(WIFI_USART,comm); // write command
 	// wait for acknowledgment or timeout 
-	for 1:cnt {
+	while counts < cnt {
 		if COMMAND_COMPLETE == 1 {
-			break()
+			return();
 		}
-		sleep(1);
 	}
 }
 
@@ -205,14 +239,11 @@ void write_image_to_web(void) { //
 	// 2. Issue the command “image transfer xxxx”, where xxxx is replaced by the length of the image you want to transfer.
 	// 3. The ESP32 will then set the “command complete” pin low and begin transferring the image over SPI.
 	// 4. After the image is done sending, the ESP32 will set the “command complete” pin high. The MCU should sense this and then move on.
-	if image length == 0 {
-		return
+	if transfer_len == 0 {
+		return();
 	}
 	else {
 		prepare_spi_transfer()
-		write_wifi_command();
-		COMMAND_COMPLETE -> 0;
-		
-		
+		write_wifi_command("image transfer xxxx",1);		
 	}
 }

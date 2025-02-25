@@ -25,6 +25,7 @@ GPIOs 19 (SPCK), 17 (MISO), 18 (MOSI), and 16 (CS) of the WIFI to PA14, PA12, PA
 
 #include <asf.h>
 #include <string.h>
+#include <stdio.h>
 
 // WIFI control pins:
 #define COMMAND_COMPLETE	PIO_PA21	// command complete pin, WIFI_GPIO_21
@@ -33,7 +34,11 @@ GPIOs 19 (SPCK), 17 (MISO), 18 (MOSI), and 16 (CS) of the WIFI to PA14, PA12, PA
 #define WIFI_GPIO_32		PIO_PA9
 // WIFI reset / setup pins:
 #define WIFI_RESET			PIO_PA19
-#define WIFI_PROVISIONING	PIO_PA18
+
+#define WIFI_PROVIS_PIN_NUM			PIO_PA18
+#define WIFI_PROVIS_PIO				PIOA
+#define WIFI_PROVIS_ID				ID_PIOA
+#define WIFI_PROVIS_ATTR				PIO_IT_RISE_EDGE
 
 // WIFI UART parameters:
 #define WIFI_USART					USART0
@@ -104,13 +109,16 @@ volatile bool new_rx_wifi;
 volatile unsigned int input_pos_wifi;
 volatile bool wifi_comm_success;
 
-volatile uint32_t byte_num;
-
 volatile uint32_t transfer_index;
 volatile uint32_t transfer_len;
 
-volatile uint8_t buff_array[0];
 volatile uint8_t provision_flag = 0;
+
+// Timer counter
+#define TC_FREQ             1
+volatile uint8_t counts;
+
+void configure_tc(void);
 
 // WIFI function definitions:
 void wifi_usart_handler(void);
