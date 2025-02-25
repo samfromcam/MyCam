@@ -14,6 +14,8 @@ volatile bool new_rx_wifi = false;
 volatile unsigned int input_pos_wifi = 0;
 volatile bool wifi_comm_success = false;
 
+volatile uint32_t byte_num = 0;
+
 volatile uint32_t transfer_index = 0;
 volatile uint32_t transfer_len = 0;
 
@@ -35,11 +37,12 @@ void wifi_usart_handler(void) {
 	}
 }
 
-void process_incoming_byte_wifi(uint8_t in_byte) {
+void process_incoming_byte_wifi(uint8_t in_byte) { //
 	// Stores every incoming byte (in_byte) from the ESP32 in a buffer.
 	// in_byte is one byte
 	// append to array
-	buff_array[transfer_index] = in_byte;
+	buff_array[byte_num] = in_byte;
+	byte_num++;
 }
 
 void wifi_command_response_handler(uint32_t ul_id, uint32_t ul_mask) {
@@ -137,12 +140,12 @@ void configure_wifi_comm_pin(void) {
 	pio_enable_interrupt(WIFI_COMM_PIO, WIFI_COMM_PIN_NUM);
 }
 
-void configure_wifi_provision_pin(void) {
+void configure_wifi_provision_pin(void) { //
 	// Configuration of button interrupt to initiate provisioning mode.
 	// if flag then interrupt
 	// This configures the ESP32 as an access point with SSID “ESD1 XY”, where X is the fifth byte of the MAC address and Y is the 
 	// sixth byte of the MAC address
-	
+	NVIC_EnableIRQ();
 }
 
 void configure_spi(void) {
@@ -180,19 +183,36 @@ void prepare_spi_transfer(void) {
 	transfer_index = 0;
 }
 
-void write_wifi_command(char* comm, uint8_t cnt) {
+void write_wifi_command(char* comm, uint8_t cnt) { //
 	// Writes a command (comm) to the ESP32, and waits either for an acknowledgment (via the “command complete” pin)
 	// or a timeout. The timeout can be created by setting the global variable counts to zero, which will automatically increment every second, 
 	// and waiting while counts < cnt.
-
+	
+	usart_write_line(WIFI_USART,comm); // write command
+	// wait for acknowledgment or timeout 
+	for 1:cnt {
+		if COMMAND_COMPLETE == 1 {
+			break()
+		}
+		sleep(1);
+	}
 }
 
-void write_image_to_web(void) {
+void write_image_to_web(void) { //
 	// Writes an image from the SAM4S8B to the ESP32. If the length of the image is zero (i.e. the image is not valid), return. Otherwise,
 	// follow this protocol (illustrated in Appendix C):
 	// 1. Configure the SPI interface to be ready for a transfer by setting its parameters appropriately.
 	// 2. Issue the command “image transfer xxxx”, where xxxx is replaced by the length of the image you want to transfer.
 	// 3. The ESP32 will then set the “command complete” pin low and begin transferring the image over SPI.
 	// 4. After the image is done sending, the ESP32 will set the “command complete” pin high. The MCU should sense this and then move on.
-
+	if image length == 0 {
+		return
+	}
+	else {
+		prepare_spi_transfer()
+		write_wifi_command();
+		COMMAND_COMPLETE -> 0;
+		
+		
+	}
 }

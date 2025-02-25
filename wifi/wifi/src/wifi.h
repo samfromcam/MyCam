@@ -27,10 +27,10 @@ GPIOs 19 (SPCK), 17 (MISO), 18 (MOSI), and 16 (CS) of the WIFI to PA14, PA12, PA
 #include <string.h>
 
 // WIFI control pins:
-#define WIFI_GPIO_21	PIO_PA21
-#define WIFI_GPIO_22	PIO_PA22
-#define WIFI_GPIO_23	PIO_PA8
-#define WIFI_GPIO_32	PIO_PA9
+#define COMMAND_COMPLETE	PIO_PA21	// command complete pin, WIFI_GPIO_21
+#define WIFI_GPIO_22		PIO_PA22
+#define WIFI_GPIO_23		PIO_PA8
+#define WIFI_GPIO_32		PIO_PA9
 // WIFI reset / setup pins:
 #define WIFI_RESET			PIO_PA19
 #define WIFI_PROVISIONING	PIO_PA18
@@ -103,6 +103,8 @@ volatile uint32_t received_byte_wifi;
 volatile bool new_rx_wifi;
 volatile unsigned int input_pos_wifi;
 volatile bool wifi_comm_success;
+
+volatile uint32_t byte_num;
 
 volatile uint32_t transfer_index;
 volatile uint32_t transfer_len;
