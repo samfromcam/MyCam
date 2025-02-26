@@ -45,7 +45,7 @@
  */
 
 #include "board.h"
-#include <ov2640.h>
+#include "camera_helper/ov2640.h"
 
 #ifdef __cplusplus
 extern "C" {

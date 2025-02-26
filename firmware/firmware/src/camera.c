@@ -14,7 +14,6 @@
 #include "sam4s.h"
 #include <stdbool.h>
 
-#include "asf.h"
 #include "conf_board.h"
 #include "conf_clock.h"
 
@@ -64,8 +63,8 @@ void configure_twi(void) {
 	NVIC_EnableIRQ(BOARD_TWI_IRQn);
 
 	/* ov7740 Initialization */
-	while (ov_init(BOARD_TWI) == 1) {
-	}
+	//while (ov_init(BOARD_TWI) == 1) {
+	//}
 
 }
 
@@ -132,8 +131,8 @@ void init_camera(void){
 	}
 	
 	// Initialize camera and wait to let it adjust  // ASK ILYA
-	while (ov_init(BOARD_TWI) == 1) {
-	}
+	//while (ov_init(BOARD_TWI) == 1) {
+	//}
 	
 }
 
@@ -159,7 +158,7 @@ uint8_t start_capture(void) {
 	
 	/* Capture data and send it to external SRAM memory thanks to PDC
 	 * feature */
-	pio_capture_to_buffer(PIOA, g_image_buffer, sizeof(g_image_buffer) >> 2);
+	pio_capture_to_buffer(PIOA, g_image_buffer, (100000) >> 2);
 
 	/* Wait end of capture*/
 	while (!((PIOA->PIO_PCISR & PIO_PCIMR_RXBUFF) ==
@@ -179,7 +178,7 @@ uint8_t find_image_len(void) {
 	uint32_t soi_pos = 0, eoi_pos = 0;
 	
 	// Find SOI marker
-	for (uint32_t i = 0; i < sizeof(g_image_buffer) - 1; i++) {
+	for (uint32_t i = 0; i < (100000) - 1; i++) {
 		if (g_image_buffer[i] == 0xFF && g_image_buffer[i+1] == 0xD8) {
 			soi_pos = i;
 			break;
@@ -187,7 +186,7 @@ uint8_t find_image_len(void) {
 	}
 	
 	// Find EOI marker
-	for (uint32_t i = soi_pos; i < sizeof(g_image_buffer) - 1; i++) {
+	for (uint32_t i = soi_pos; i < (100000) - 1; i++) {
 		if (g_image_buffer[i] == 0xFF && g_image_buffer[i+1] == 0xD9) {
 			eoi_pos = i + 1;
 			break;

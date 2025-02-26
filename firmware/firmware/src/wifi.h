@@ -27,18 +27,24 @@ GPIOs 19 (SPCK), 17 (MISO), 18 (MOSI), and 16 (CS) of the WIFI to PA14, PA12, PA
 #include <string.h>
 #include <stdio.h>
 
+// LED pins:
+#define LED_PIN				PIO_PA25	// check this pin, WIFI_GPIO_25
+// #define NET_INDICATOR		PIO_PA25	// configure network indicator
+// #define WEB_INDICATOR		PIO_PA26	// configure websocket connection indicator
+// #define PROVIS_INDICATOR	PIO_PA27	// configure provisioning indicator
+
 // WIFI control pins:
-#define COMMAND_COMPLETE	PIO_PA21	// command complete pin, WIFI_GPIO_21
-#define WIFI_GPIO_22		PIO_PA22
-#define WIFI_GPIO_23		PIO_PA8 // CONNECTION PIN
-#define WIFI_GPIO_32		PIO_PA9 // CLIENT PIN 
+#define COMMAND_COMPLETE	PIO_PA21	// command complete pin, WIFI_GPIO_21, COMM PIN
+#define WIFI_GPIO_22		PIO_PA22	// NETWORK PIN
+#define WIFI_GPIO_23		PIO_PA8		// CONNECTION PIN
+#define WIFI_GPIO_32		PIO_PA9		// CLIENT PIN 
 // WIFI reset / setup pins:
 #define WIFI_RESET			PIO_PA19
 
 #define WIFI_PROVIS_PIN_NUM			PIO_PA18
 #define WIFI_PROVIS_PIO				PIOA
 #define WIFI_PROVIS_ID				ID_PIOA
-#define WIFI_PROVIS_ATTR				PIO_IT_RISE_EDGE
+#define WIFI_PROVIS_ATTR			PIO_IT_RISE_EDGE
 
 // WIFI UART parameters:
 #define WIFI_USART					USART0
@@ -104,15 +110,8 @@ GPIOs 19 (SPCK), 17 (MISO), 18 (MOSI), and 16 (CS) of the WIFI to PA14, PA12, PA
 // WIFI variable definitions:
 #define MAX_INPUT_WIFI 1000
 volatile char input_line_wifi[MAX_INPUT_WIFI];
-volatile uint32_t received_byte_wifi;
-volatile bool new_rx_wifi;
-volatile unsigned int input_pos_wifi;
-volatile bool wifi_comm_success;
 
-volatile uint32_t transfer_index;
-volatile uint32_t transfer_len;
-
-volatile uint8_t provision_flag = 0;
+volatile uint8_t provision_flag;
 
 // Timer counter
 #define TC_FREQ             1
@@ -133,7 +132,7 @@ void configure_wifi_provision_pin(void);
 void configure_spi(void);
 void spi_peripheral_initialize(void);
 void prepare_spi_transfer(void);
-void write_wifi_command(char* comm, uint8_t cnt)
-void write_image_to_web(void)
+void write_wifi_command(char* comm, uint8_t cnt);
+void write_image_to_web(void);
 
 #endif /* WIFI_H_ */

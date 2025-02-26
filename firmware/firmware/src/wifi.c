@@ -5,8 +5,8 @@
  *  Author: elian
  */ 
 
-#include <asf.h>
 #include "wifi.h"
+#include "timer_interface.h"
 
 // WIFI variable initializations:
 volatile uint32_t received_byte_wifi = 0;
@@ -19,46 +19,8 @@ volatile uint32_t transfer_len = 0;
 
 volatile uint8_t provision_flag = 0;
 
-void TC0_Handler(void)
-{
-	uint32_t ul_status;
-
-	// Read TC0 status.
-	ul_status = tc_get_status(TC0, 0);
-
-	// RC compare.
-	if ((ul_status & TC_SR_CPCS) == TC_SR_CPCS) {
-		counts++;
-	}
-}
-
-void configure_tc(void)
-{
-	uint32_t ul_div;
-	uint32_t ul_tcclks;
-	uint32_t ul_sysclk;
-
-	// Get system clock.
-	ul_sysclk = sysclk_get_cpu_hz();
-
-	// Configure PMC.
-	pmc_enable_periph_clk(ID_TC0);
-
-	// Configure TC for a 1Hz frequency and trigger on RC compare.
-	tc_find_mck_divisor(TC_FREQ, ul_sysclk, &ul_div, &ul_tcclks, ul_sysclk);
-	tc_init(TC0, 0, ul_tcclks | TC_CMR_CPCTRG);
-	tc_write_rc(TC0, 0, (ul_sysclk / ul_div) / TC_FREQ);
-
-	// Configure and enable interrupt on RC compare.
-	NVIC_EnableIRQ((IRQn_Type) ID_TC0);
-	tc_enable_interrupt(TC0, 0, TC_IER_CPCS);
-	
-	// Start the timer
-	tc_start(TC0, 0);
-}
-
 void wifi_usart_handler(void) {
-	// Handler for incoming data from the WiFi. Should call process incoming byte wifi when a new byte arrives.
+	// Handler for incoming data from the WiFi. Should call process incoming byte Wifi when a new byte arrives.
 	uint32_t ul_status;
 
 	/* Read USART status. */
@@ -100,7 +62,7 @@ void wifi_provision_handler(uint32_t ul_id, uint32_t ul_mask) { //
 	// Handler for button to initiate provisioning mode of the ESP32. Should set a flag indicating a request to initiate provisioning mode.
 	// WIFI_PROVISIONING pin is button
 	// when low set flag as true 
-	if (WIFI_PROVIS_PIN_NUM == 0) {
+	if (ioport_get_pin_level(WIFI_PROVIS_PIN_NUM) == true) {
 		provision_flag = 1;
 	}
 }
@@ -226,8 +188,8 @@ void write_wifi_command(char* comm, uint8_t cnt) { //
 	usart_write_line(WIFI_USART,comm); // write command
 	// wait for acknowledgment or timeout 
 	counts = 0;
-	while counts < cnt {
-		if COMMAND_COMPLETE == 1 {
+	while (counts < cnt) {
+		if (ioport_get_pin_level(COMMAND_COMPLETE) == true) {
 			return;
 		}
 	}
@@ -240,12 +202,12 @@ void write_image_to_web(void) { //
 	// 2. Issue the command ?image transfer xxxx?, where xxxx is replaced by the length of the image you want to transfer.
 	// 3. The ESP32 will then set the ?command complete? pin low and begin transferring the image over SPI.
 	// 4. After the image is done sending, the ESP32 will set the ?command complete? pin high. The MCU should sense this and then move on.
-	if transfer_len == 0 {
+	if (transfer_len == 0) {
 		return;
 	}
 	else {
-		prepare_spi_transfer()
-		char* transfer_message;
+		prepare_spi_transfer();
+		char transfer_message;
 		sprintf(transfer_message, "image transfer %i\n", transfer_len);
 		write_wifi_command(transfer_message,1);		
 	}

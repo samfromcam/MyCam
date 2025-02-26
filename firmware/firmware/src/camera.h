@@ -8,6 +8,7 @@
 #ifndef CAMERA_H_
 #define CAMERA_H_
 #include "camera_helper/ov2640.h"
+#include <asf.h>
 
 // Camera Pin Definitions
 #define CAMERA_VSYNC_PIN       PIO_PA15
@@ -21,6 +22,7 @@
 #define BOARD_TWI              TWI0
 #define BOARD_TWI_ID           ID_TWI0
 #define BOARD_TWI_ADDR         OV_I2C_SENSOR_ADDRESS 
+#define BOARD_TWI_IRQn		   TWI0_IRQn
 
 // Function declarations
 void vsync_handler(uint32_t ul_id, uint32_t ul_mask);
@@ -34,9 +36,9 @@ uint8_t start_capture(void);
 uint8_t find_image_len(void);
 
 // Variable declarations
-extern volatile uint8_t g_vsync_flag;
-extern uint8_t g_image_buffer[];
-extern uint32_t g_image_length;
+volatile uint8_t g_vsync_flag;
+uint8_t g_image_buffer[];
+uint32_t g_image_length;
 
 
 #endif /* CAMERA_H_ */

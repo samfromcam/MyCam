@@ -1,12 +1,10 @@
-#include <asf.h>
 #include "conf_board.h"
 #include "conf_clock.h"
 #include "wifi.h"
 #include "camera.h"
 #include "timer_interface.h"
 
-int main(void)
-{
+int main(void) {
 	// Initialize clock and board definitions
 	sysclk_init();
 	board_init();
