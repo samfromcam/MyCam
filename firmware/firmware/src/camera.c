@@ -16,6 +16,7 @@
 
 #include "conf_board.h"
 #include "conf_clock.h"
+#include "camera_helper/ov2640.h"
 
 #define TWI_CLK     (400000UL)
 
@@ -49,7 +50,7 @@ void configure_twi(void) {
 	}
 
 	/* Enable TWI peripheral */
-	pmc_enable_periph_clk(BOARD_TWI);
+	pmc_enable_periph_clk(BOARD_TWI_ID);
 
 	/* Init TWI peripheral */
 	opt.master_clk = sysclk_get_cpu_hz();
@@ -119,7 +120,9 @@ void init_camera(void){
 
 	/* Init PIO capture*/
 	pio_capture_init(PIOA, ID_PIOA);
-
+	
+	gpio_configure_pin(PIN_PCK1, PIN_PCK1_FLAGS);
+	
 	// Enable XCLCK
 	pmc_enable_pllbck(7, 0x1, 1); /* PLLA work at 96 Mhz */ // PA17 is xclck signal
 	

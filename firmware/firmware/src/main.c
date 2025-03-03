@@ -3,6 +3,8 @@
 #include "wifi.h"
 #include "camera.h"
 #include "timer_interface.h"
+#include "camera_helper/ov2640.h"
+#include <asf.h>
 
 int main(void) {
 	// Initialize clock and board definitions

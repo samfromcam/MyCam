@@ -24,6 +24,8 @@
 #define BOARD_TWI_ADDR         OV_I2C_SENSOR_ADDRESS 
 #define BOARD_TWI_IRQn		   TWI0_IRQn
 
+#define PIN_PCK1				(PIO_PA17_IDX)
+#define PIN_PCK1_FLAGS			(PIO_PERIPH_B | PIO_DEFAULT)
 // Function declarations
 void vsync_handler(uint32_t ul_id, uint32_t ul_mask);
 void init_vsync_interrupts(void);
