@@ -10,14 +10,15 @@
 
 // WIFI variable initializations:
 volatile uint32_t received_byte_wifi = 0;
-volatile bool new_rx_wifi = false;
-volatile unsigned int input_pos_wifi = 0;
-volatile bool wifi_comm_success = false;
+volatile uint8_t new_rx_wifi = 0;
+volatile uint32_t input_pos_wifi = 0;
+volatile uint8_t wifi_comm_success = 0; // comm data received flag
 
 volatile uint32_t transfer_index = 0;
 volatile uint32_t transfer_len = 0;
 
-volatile uint8_t provision_flag = 0;
+volatile uint8_t provision_flag = 0; // provision mode flag
+volatile uint8_t success_flag = 0; // success received flag
 
 void wifi_usart_handler(void) {
 	// Handler for incoming data from the WiFi. Should call process incoming byte Wifi when a new byte arrives.
@@ -29,7 +30,7 @@ void wifi_usart_handler(void) {
 	/* Receive buffer is full. */
 	if (ul_status & US_CSR_RXBUFF) {
 		usart_read(WIFI_USART, &received_byte_wifi);
-		new_rx_wifi = true;
+		new_rx_wifi = 1;
 		process_incoming_byte_wifi((uint8_t)received_byte_wifi);
 	}
 }
@@ -44,7 +45,7 @@ void wifi_command_response_handler(uint32_t ul_id, uint32_t ul_mask) {
 	unused(ul_id);
 	unused(ul_mask);
 	
-	wifi_comm_success = true;
+	wifi_comm_success = 1;
 	process_data_wifi();
 	for (int jj=0;jj<MAX_INPUT_WIFI;jj++) input_line_wifi[jj] = 0;
 	input_pos_wifi = 0;
@@ -54,7 +55,7 @@ void process_data_wifi(void) {
 	// Processes the response of the ESP32, which should be stored in the buffer filled by process incoming byte wifi. This processing
 	// should be looking for certain responses that the ESP32 should give, such as ?SUCCESS? when ?test? is sent to it.
 	if (strstr(input_line_wifi, "SUCCESS")) {
-		ioport_toggle_pin_level(LED_PIN);
+		success_flag = 1;
 	}
 }
 
@@ -62,9 +63,10 @@ void wifi_provision_handler(uint32_t ul_id, uint32_t ul_mask) { //
 	// Handler for button to initiate provisioning mode of the ESP32. Should set a flag indicating a request to initiate provisioning mode.
 	// WIFI_PROVISIONING pin is button
 	// when low set flag as true 
-	if (ioport_get_pin_level(WIFI_PROVIS_PIN_NUM) == true) {
-		provision_flag = 1;
-	}
+	unused(ul_id);
+	unused(ul_mask);
+	
+	provision_flag = 1;
 }
 
 void wifi_spi_handler(void) {
@@ -140,7 +142,8 @@ void configure_wifi_provision_pin(void) { //
 	// This configures the ESP32 as an access point with SSID ?ESD1 XY?, where X is the fifth byte of the MAC address and Y is the 
 	// sixth byte of the MAC address
 	pmc_enable_periph_clk(WIFI_PROVIS_ID);
-	pio_handler_set(WIFI_PROVIS_PIO, WIFI_PROVIS_ID, WIFI_PROVIS_PIN_NUM, WIFI_PROVIS_ATTR, wifi_command_response_handler);
+	pio_set_debounce_filter(WIFI_PROVIS_PIO, WIFI_PROVIS_PIN_NUM, 10);
+	pio_handler_set(WIFI_PROVIS_PIO, WIFI_PROVIS_ID, WIFI_PROVIS_PIN_NUM, WIFI_PROVIS_ATTR, wifi_provision_handler);
 	NVIC_EnableIRQ((IRQn_Type)WIFI_PROVIS_ID);
 	pio_enable_interrupt(WIFI_PROVIS_PIO, WIFI_PROVIS_PIN_NUM);
 }
@@ -185,13 +188,11 @@ void write_wifi_command(char* comm, uint8_t cnt) { //
 	// or a timeout. The timeout can be created by setting the global variable counts to zero, which will automatically increment every second, 
 	// and waiting while counts < cnt.
 	
+	wifi_comm_success = 0;
 	usart_write_line(WIFI_USART,comm); // write command
 	// wait for acknowledgment or timeout 
 	counts = 0;
-	while (counts < cnt) {
-		if (ioport_get_pin_level(COMMAND_COMPLETE) == true) {
-			return;
-		}
+	while ((counts < cnt) && (!wifi_comm_success)) {
 	}
 }
 
@@ -205,10 +206,10 @@ void write_image_to_web(void) { //
 	if (transfer_len == 0) {
 		return;
 	}
-	else {
-		prepare_spi_transfer();
-		char transfer_message;
-		sprintf(transfer_message, "image transfer %i\n", transfer_len);
-		write_wifi_command(transfer_message,1);		
-	}
+	
+	prepare_spi_transfer();
+	uint8_t transfer_message[100];
+	sprintf(transfer_message, "image transfer %i\n", transfer_len);
+	write_wifi_command(transfer_message,5);		
+	
 }

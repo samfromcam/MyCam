@@ -1,5 +1,4 @@
-src/main.d src/main.o: ../src/main.c ../src/config/conf_board.h \
- ../src/config/conf_clock.h ../src/wifi.h ../src/asf.h \
+src/main.d src/main.o: ../src/main.c ../src/asf.h \
  ../src/ASF/sam/utils/compiler.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\lib\gcc\arm-none-eabi\6.3.1\include\stddef.h \
  ../src/ASF/common/utils/parts.h \
@@ -109,8 +108,8 @@ src/main.d src/main.o: ../src/main.c ../src/config/conf_board.h \
  ../src/ASF/common/utils/interrupt/interrupt_sam_nvic.h \
  ../src/ASF/sam/utils/status_codes.h \
  ../src/ASF/common/boards/user_board/user_board.h \
- ../src/ASF/common/services/delay/delay.h \
- ../src/ASF/common/services/clock/sysclk.h \
+ ../src/config/conf_board.h ../src/ASF/common/services/delay/delay.h \
+ ../src/ASF/common/services/clock/sysclk.h ../src/config/conf_clock.h \
  ../src/ASF/common/services/clock/sam4s/sysclk.h \
  ../src/ASF/common/services/clock/osc.h \
  ../src/ASF/common/services/clock/sam4s/osc.h \
@@ -130,17 +129,11 @@ src/main.d src/main.o: ../src/main.c ../src/config/conf_board.h \
  ../src/ASF/common/services/serial/sam_uart/uart_serial.h \
  ../src/ASF/sam/drivers/usart/usart.h ../src/config/conf_uart_serial.h \
  ../src/ASF/sam/drivers/wdt/wdt.h \
- ../src/ASF/sam/drivers/pio/pio_handler.h \
+ ../src/ASF/sam/drivers/pio/pio_handler.h ../src/timer_interface.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\string.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\xlocale.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\sys\string.h \
- ../src/camera.h ../src/camera_helper/ov2640.h ../src/timer_interface.h
-
-../src/config/conf_board.h:
-
-../src/config/conf_clock.h:
-
-../src/wifi.h:
+ ../src/wifi.h ../src/camera_helper/ov2640.h ../src/camera.h
 
 ../src/asf.h:
 
@@ -362,9 +355,13 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-no
 
 ../src/ASF/common/boards/user_board/user_board.h:
 
+../src/config/conf_board.h:
+
 ../src/ASF/common/services/delay/delay.h:
 
 ../src/ASF/common/services/clock/sysclk.h:
+
+../src/config/conf_clock.h:
 
 ../src/ASF/common/services/clock/sam4s/sysclk.h:
 
@@ -416,14 +413,16 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-no
 
 ../src/ASF/sam/drivers/pio/pio_handler.h:
 
+../src/timer_interface.h:
+
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\string.h:
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\xlocale.h:
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\sys\string.h:
 
-../src/camera.h:
+../src/wifi.h:
 
 ../src/camera_helper/ov2640.h:
 
-../src/timer_interface.h:
+../src/camera.h:

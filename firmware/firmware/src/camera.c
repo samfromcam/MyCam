@@ -3,22 +3,11 @@
  *
  * Created: 2/20/2025 1:22:42 PM
  *  Author: snb5582
- */ 
+ */
 
 #include "camera.h"
-#include "board.h"
-#include "pio.h"
-#include "pdc.h"
-#include "pmc.h"
-#include "twi.h"
-#include "sam4s.h"
-#include <stdbool.h>
 
-#include "conf_board.h"
-#include "conf_clock.h"
-#include "camera_helper/ov2640.h"
-
-#define TWI_CLK     (400000UL)
+#define TWI_CLK (400000UL);
 
 void vsync_handler(uint32_t ul_id, uint32_t ul_mask) {
 	unused(ul_id);
@@ -36,19 +25,6 @@ void init_vsync_interrupts(void) {
 void configure_twi(void) {
 	twi_options_t opt;
 
-	/* Init Vsync handler*/
-	init_vsync_interrupts();
-
-	/* Init PIO capture*/
-	pio_capture_init(PIOA, ID_PIOA);
-
-	/* Init PCK0 to work at 24 Mhz */
-	/* 96/4=24 Mhz */
-	PMC->PMC_PCK[0] = (PMC_PCK_PRES_CLK_4 | PMC_PCK_CSS_PLLA_CLK);
-	PMC->PMC_SCER = PMC_SCER_PCK0;
-	while (!(PMC->PMC_SCSR & PMC_SCSR_PCK0)) {
-	}
-
 	/* Enable TWI peripheral */
 	pmc_enable_periph_clk(BOARD_TWI_ID);
 
@@ -57,16 +33,17 @@ void configure_twi(void) {
 	opt.speed      = TWI_CLK;
 	twi_master_init(BOARD_TWI, &opt);
 
+	/* Configure TWI pins */
+	#ifdef BOARD_TWI0
+		gpio_configure_pin(TWI_DATA_GPIO, TWI_DATA_FLAG);
+		gpio_configure_pin(TWI_CLK_GPIO, TWI_CLK_FLAGS);
+	#endif
+
 	/* Configure TWI interrupts */
 	NVIC_DisableIRQ(BOARD_TWI_IRQn);
 	NVIC_ClearPendingIRQ(BOARD_TWI_IRQn);
 	NVIC_SetPriority(BOARD_TWI_IRQn, 0);
 	NVIC_EnableIRQ(BOARD_TWI_IRQn);
-
-	/* ov7740 Initialization */
-	//while (ov_init(BOARD_TWI) == 1) {
-	//}
-
 }
 
 void pio_capture_init(Pio *p_pio, uint32_t ul_id) {
@@ -114,29 +91,45 @@ void init_camera(void){
 	//Configuration of camera pins, camera clock (XCLK), and
 	//calling the configure_twi() function.
 	configure_twi();
-	
+
 	/* Init Vsync handler*/
 	init_vsync_interrupts();
 
 	/* Init PIO capture*/
 	pio_capture_init(PIOA, ID_PIOA);
-	
+
 	gpio_configure_pin(PIN_PCK1, PIN_PCK1_FLAGS);
-	
+
 	// Enable XCLCK
 	pmc_enable_pllbck(7, 0x1, 1); /* PLLA work at 96 Mhz */ // PA17 is xclck signal
-	
+
+	/* Configure Image sensor pins */
+	/* Configure Camera sensor pins using new definitions */
+	gpio_configure_pin(CAMERA_RST_GPIO, CAMERA_RST_FLAGS);
+	/* Configure VSYNC, XCLK, and PCLK pins */
+	gpio_configure_pin(CAMERA_HSYNC_GPIO, CAMERA_HSYNC_FLAGS);  // e.g., input or output flag as needed
+	gpio_configure_pin(CAMERA_VSYNC_GPIO,  CAMERA_VSYNC_FLAGS);   // e.g., output for clock signal  // e.g., input for pixel clock
+
+	/* Configure Camera Data Bus pins (PA24-PA31) */
+	/* Assuming CAMERA_DATA_PINS is defined as 0xFF000000, which maps to PA24 to PA31 */
+	for (uint32_t pin = PIO_PA24; pin <= PIO_PA31; pin++) {
+		gpio_configure_pin(pin, CAMERA_DATA_FLAGS);  // Define CAMERA_DATA_FLAGS as needed
+	}
+
+
 	/* Init PCK1 to work at 24 Mhz initialize PLLB*/
 	/* 96/4=24 Mhz */
 	PMC->PMC_PCK[1] = (PMC_PCK_PRES_CLK_4 | PMC_PCK_CSS_PLLB_CLK);
 	PMC->PMC_SCER = PMC_SCER_PCK1;
 	while (!(PMC->PMC_SCSR & PMC_SCSR_PCK1)) {
 	}
-	
-	// Initialize camera and wait to let it adjust  // ASK ILYA
-	//while (ov_init(BOARD_TWI) == 1) {
-	//}
-	
+
+	// OV initialization
+	while (ov_init(BOARD_TWI) == 1){}
+
+	configure_camera();
+	delay_ms(3000);
+
 }
 
 void configure_camera(void){
@@ -144,7 +137,6 @@ void configure_camera(void){
 	ov_configure(BOARD_TWI, YUV422);
 	ov_configure(BOARD_TWI, JPEG);
 	ov_configure(BOARD_TWI, JPEG_320x240);
-	delay_ms(3000);
 }
 
 uint8_t start_capture(void) {
@@ -153,33 +145,33 @@ uint8_t start_capture(void) {
 	while (!g_vsync_flag) {
 		// Wait for VSYNC rising edge
 	}
-	
+
 	pio_disable_interrupt(PIOA, CAMERA_VSYNC_PIN);
-	
+
 	// Enable the capture function to start capture data
 	pio_capture_enable(PIOA);
-	
+
 	/* Capture data and send it to external SRAM memory thanks to PDC
-	 * feature */
+	* feature */
 	pio_capture_to_buffer(PIOA, g_image_buffer, (100000) >> 2);
 
 	/* Wait end of capture*/
 	while (!((PIOA->PIO_PCISR & PIO_PCIMR_RXBUFF) ==
-			PIO_PCIMR_RXBUFF)) {
+		PIO_PCIMR_RXBUFF)) {
 	}
 
 	/* Disable pio capture*/
 	pio_capture_disable(PIOA);
 
 	/* Reset vsync flag*/
-	g_vsync_flag = 0;
-		
+	g_vsync_flag = false;
+
 }
 
 
 uint8_t find_image_len(void) {
 	uint32_t soi_pos = 0, eoi_pos = 0;
-	
+
 	// Find SOI marker
 	for (uint32_t i = 0; i < (100000) - 1; i++) {
 		if (g_image_buffer[i] == 0xFF && g_image_buffer[i+1] == 0xD8) {
@@ -187,18 +179,18 @@ uint8_t find_image_len(void) {
 			break;
 		}
 	}
-	
+
 	// Find EOI marker
 	for (uint32_t i = soi_pos; i < (100000) - 1; i++) {
 		if (g_image_buffer[i] == 0xFF && g_image_buffer[i+1] == 0xD9) {
 			eoi_pos = i + 1;
 			break;
-		}
+			}
 	}
-	
+
 	if (soi_pos < eoi_pos && eoi_pos > 0) {
 		return eoi_pos - soi_pos + 1;
 	}
-	
+
 	return 0;
 }

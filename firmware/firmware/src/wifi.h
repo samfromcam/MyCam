@@ -26,15 +26,17 @@ GPIOs 19 (SPCK), 17 (MISO), 18 (MOSI), and 16 (CS) of the WIFI to PA14, PA12, PA
 #include <asf.h>
 #include <string.h>
 #include <stdio.h>
-
-// LED pins:
-#define LED_PIN				PIO_PA25	// check this pin, WIFI_GPIO_25
-// #define NET_INDICATOR		PIO_PA25	// configure network indicator
-// #define WEB_INDICATOR		PIO_PA26	// configure websocket connection indicator
-// #define PROVIS_INDICATOR	PIO_PA27	// configure provisioning indicator
+#include "camera_helper/ov2640.h"
+#include <timer_interface.h>
+#include <camera.h>
 
 // WIFI control pins:
-#define COMMAND_COMPLETE	PIO_PA21	// command complete pin, WIFI_GPIO_21, COMM PIN
+// #define COMM_GPIO_PIN_NUM		PIO_PA21_IDX
+// #define CLIENTS_GPIO_PIN_NUM	PIO_PA8_IDX
+// #define NET_GPIO_PIN_NUM		PIO_PA22_IDX
+// #define WIFI_RST_PIN_NUM		PIO_PA19_IDX
+
+// #define COMMAND_COMPLETE	PIO_PA21	// command complete pin, WIFI_GPIO_21, COMM PIN
 #define WIFI_GPIO_22		PIO_PA22	// NETWORK PIN
 #define WIFI_GPIO_23		PIO_PA8		// CONNECTION PIN
 #define WIFI_GPIO_32		PIO_PA9		// CLIENT PIN 
@@ -44,7 +46,7 @@ GPIOs 19 (SPCK), 17 (MISO), 18 (MOSI), and 16 (CS) of the WIFI to PA14, PA12, PA
 #define WIFI_PROVIS_PIN_NUM			PIO_PA18
 #define WIFI_PROVIS_PIO				PIOA
 #define WIFI_PROVIS_ID				ID_PIOA
-#define WIFI_PROVIS_ATTR			PIO_IT_RISE_EDGE
+#define WIFI_PROVIS_ATTR			PIO_DEBOUNCE | PIO_IT_EDGE | PIO_PULLUP
 
 // WIFI UART parameters:
 #define WIFI_USART					USART0
@@ -56,7 +58,7 @@ GPIOs 19 (SPCK), 17 (MISO), 18 (MOSI), and 16 (CS) of the WIFI to PA14, PA12, PA
 #define WIFI_USART_PARITY			US_MR_PAR_NO
 #define WIFI_USART_STOP_BITS		US_MR_NBSTOP_1_BIT
 #define WIFI_USART_MODE				US_MR_CHMODE_NORMAL
-// WIFI UART pins:
+// WIFI USART pins:
 #define PINS_WIFI_USART				(PIO_PA5A_RXD0 | PIO_PA6A_TXD0)
 #define PINS_WIFI_USART_FLAGS		(PIO_PERIPH_A | PIO_DEFAULT)
 #define PINS_WIFI_USART_MASK		(PIO_PA5A_RXD0 | PIO_PA6A_TXD0)
@@ -102,9 +104,15 @@ GPIOs 19 (SPCK), 17 (MISO), 18 (MOSI), and 16 (CS) of the WIFI to PA14, PA12, PA
 // all interrupt mask:
 #define ALL_INTERRUPT_MASK  0xffffffff
 
-#define WIFI_COMM_PIN_NUM			PIO_PB10
-#define WIFI_COMM_PIO				PIOB
-#define WIFI_COMM_ID				ID_PIOB
+// #define WIFI_COMM_PIN_NUM			PIO_PB10
+// #define WIFI_COMM_PIO				PIOB
+// #define WIFI_COMM_ID				ID_PIOB
+// #define WIFI_COMM_ATTR				PIO_IT_RISE_EDGE
+
+#define WIFI_COMM_PIN_NUM			PIO_PA21
+#define WIFI_COMM_PIO				PIOA
+#define WIFI_COMM_ID				ID_PIOA
+#define WIFI_COMM_MASK				PIO_PA21_IDX
 #define WIFI_COMM_ATTR				PIO_IT_RISE_EDGE
 
 // WIFI variable definitions:

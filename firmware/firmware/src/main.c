@@ -31,7 +31,7 @@ int main(void) {
 	
 	while (!ioport_get_pin_level(WIFI_GPIO_23)) { // Choose: connection pin 23
 		if (provision_flag) {
-			write_wifi_command("provision\r\n", 5); 
+			write_wifi_command("provision\r\n", 5);
 			provision_flag = 0;
 		}
 		delay_ms(1000);
@@ -40,7 +40,7 @@ int main(void) {
 	// Send test command to WiFi module
 	while (1) {
 		write_wifi_command("test\r\n", 10);
-		// 
+		//
 		if (strstr((char*)input_line_wifi, "SUCCESS")) {
 			break;
 		}
