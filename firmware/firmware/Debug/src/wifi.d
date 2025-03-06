@@ -134,7 +134,7 @@ src/wifi.d src/wifi.o: ../src/wifi.c ../src/wifi.h ../src/asf.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\xlocale.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\sys\string.h \
  ../src/camera_helper/ov2640.h ../src/timer_interface.h ../src/camera.h \
- ../src/timer_interface.h
+ ../src/config/conf_board.h ../src/timer_interface.h
 
 ../src/wifi.h:
 
@@ -427,5 +427,7 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-no
 ../src/timer_interface.h:
 
 ../src/camera.h:
+
+../src/config/conf_board.h:
 
 ../src/timer_interface.h:

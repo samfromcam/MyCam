@@ -12,7 +12,7 @@
 volatile uint32_t received_byte_wifi = 0;
 volatile uint8_t new_rx_wifi = 0;
 volatile uint32_t input_pos_wifi = 0;
-volatile uint8_t wifi_comm_success = 0; // comm data received flag
+volatile uint8_t wifi_comm_success = false; // comm data received flag
 
 volatile uint32_t transfer_index = 0;
 volatile uint32_t transfer_len = 0;
@@ -20,7 +20,7 @@ volatile uint32_t transfer_len = 0;
 volatile uint8_t provision_flag = 0; // provision mode flag
 volatile uint8_t success_flag = 0; // success received flag
 
-void wifi_usart_handler(void) {
+void WIFI_USART_HANDLER(void) {
 	// Handler for incoming data from the WiFi. Should call process incoming byte Wifi when a new byte arrives.
 	uint32_t ul_status;
 
@@ -179,8 +179,8 @@ void spi_peripheral_initialize(void) {
 
 void prepare_spi_transfer(void) {
 	// Set necessary parameters to prepare for SPI transfer.
-	transfer_len = 100;
-	transfer_index = 0;
+	transfer_len = g_image_length;
+	transfer_index = soi_pos;
 }
 
 void write_wifi_command(char* comm, uint8_t cnt) { //
@@ -188,10 +188,11 @@ void write_wifi_command(char* comm, uint8_t cnt) { //
 	// or a timeout. The timeout can be created by setting the global variable counts to zero, which will automatically increment every second, 
 	// and waiting while counts < cnt.
 	
-	wifi_comm_success = 0;
-	usart_write_line(WIFI_USART,comm); // write command
+	wifi_comm_success = false;
+
 	// wait for acknowledgment or timeout 
 	counts = 0;
+	usart_write_line(WIFI_USART,comm); // write command
 	while ((counts < cnt) && (!wifi_comm_success)) {
 	}
 }
@@ -203,13 +204,13 @@ void write_image_to_web(void) { //
 	// 2. Issue the command ?image transfer xxxx?, where xxxx is replaced by the length of the image you want to transfer.
 	// 3. The ESP32 will then set the ?command complete? pin low and begin transferring the image over SPI.
 	// 4. After the image is done sending, the ESP32 will set the ?command complete? pin high. The MCU should sense this and then move on.
-	if (transfer_len == 0) {
+	if (g_image_length == 0) {
 		return;
 	}
 	
 	prepare_spi_transfer();
 	uint8_t transfer_message[100];
-	sprintf(transfer_message, "image transfer %i\n", transfer_len);
+	sprintf(transfer_message, "image transfer %i\r\n", g_image_length);
 	write_wifi_command(transfer_message,5);		
 	
 }

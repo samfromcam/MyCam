@@ -29,19 +29,13 @@ GPIOs 19 (SPCK), 17 (MISO), 18 (MOSI), and 16 (CS) of the WIFI to PA14, PA12, PA
 #include "camera_helper/ov2640.h"
 #include <timer_interface.h>
 #include <camera.h>
+#include "config/conf_board.h"
 
 // WIFI control pins:
 // #define COMM_GPIO_PIN_NUM		PIO_PA21_IDX
 // #define CLIENTS_GPIO_PIN_NUM	PIO_PA8_IDX
 // #define NET_GPIO_PIN_NUM		PIO_PA22_IDX
-// #define WIFI_RST_PIN_NUM		PIO_PA19_IDX
-
-// #define COMMAND_COMPLETE	PIO_PA21	// command complete pin, WIFI_GPIO_21, COMM PIN
-#define WIFI_GPIO_22		PIO_PA22	// NETWORK PIN
-#define WIFI_GPIO_23		PIO_PA8		// CONNECTION PIN
-#define WIFI_GPIO_32		PIO_PA9		// CLIENT PIN 
-// WIFI reset / setup pins:
-#define WIFI_RESET			PIO_PA19
+// #define WIFI_RST_PIN_NUM		PIO_PA19_IDX
 
 #define WIFI_PROVIS_PIN_NUM			PIO_PA18
 #define WIFI_PROVIS_PIO				PIOA
@@ -119,6 +113,9 @@ GPIOs 19 (SPCK), 17 (MISO), 18 (MOSI), and 16 (CS) of the WIFI to PA14, PA12, PA
 #define MAX_INPUT_WIFI 1000
 volatile char input_line_wifi[MAX_INPUT_WIFI];
 
+// Variable flag definitions:
+volatile uint8_t wifi_comm_success;
+volatile uint8_t success_flag;
 volatile uint8_t provision_flag;
 
 // Timer counter
@@ -128,7 +125,7 @@ volatile uint8_t counts;
 void configure_tc(void);
 
 // WIFI function definitions:
-void wifi_usart_handler(void);
+// void wifi_usart_handler(void);
 void process_incoming_byte_wifi(uint8_t in_byte);
 void wifi_command_response_handler(uint32_t ul_id, uint32_t ul_mask);
 void process_data_wifi(void);

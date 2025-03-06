@@ -9,6 +9,13 @@
 
 #define TWI_CLK (400000UL);
 
+volatile uint32_t g_vsync_flag = false;
+volatile char g_image_buffer[100000];
+uint32_t g_image_length = 0;
+
+volatile uint32_t soi_pos = 0; 
+volatile uint32_t eoi_pos = 0; 
+
 void vsync_handler(uint32_t ul_id, uint32_t ul_mask) {
 	unused(ul_id);
 	unused(ul_mask);
@@ -112,9 +119,17 @@ void init_camera(void){
 
 	/* Configure Camera Data Bus pins (PA24-PA31) */
 	/* Assuming CAMERA_DATA_PINS is defined as 0xFF000000, which maps to PA24 to PA31 */
-	for (uint32_t pin = PIO_PA24; pin <= PIO_PA31; pin++) {
-		gpio_configure_pin(pin, CAMERA_DATA_FLAGS);  // Define CAMERA_DATA_FLAGS as needed
-	}
+// 	for (uint32_t pin = PIO_PA24; pin <= PIO_PA31; pin++) {
+// 		gpio_configure_pin(pin, CAMERA_DATA_FLAGS);  // Define CAMERA_DATA_FLAGS as needed
+// 	}
+	gpio_configure_pin(CAMERA_DATA_BUS_D0, CAMERA_DATA_FLAGS);
+	gpio_configure_pin(CAMERA_DATA_BUS_D1, CAMERA_DATA_FLAGS);
+	gpio_configure_pin(CAMERA_DATA_BUS_D2, CAMERA_DATA_FLAGS);
+	gpio_configure_pin(CAMERA_DATA_BUS_D3, CAMERA_DATA_FLAGS);
+	gpio_configure_pin(CAMERA_DATA_BUS_D4, CAMERA_DATA_FLAGS);
+	gpio_configure_pin(CAMERA_DATA_BUS_D5, CAMERA_DATA_FLAGS);
+	gpio_configure_pin(CAMERA_DATA_BUS_D6, CAMERA_DATA_FLAGS);
+	gpio_configure_pin(CAMERA_DATA_BUS_D7, CAMERA_DATA_FLAGS);
 
 
 	/* Init PCK1 to work at 24 Mhz initialize PLLB*/
@@ -142,6 +157,7 @@ void configure_camera(void){
 uint8_t start_capture(void) {
 
 	pio_enable_interrupt(PIOA, CAMERA_VSYNC_PIN);
+	
 	while (!g_vsync_flag) {
 		// Wait for VSYNC rising edge
 	}
@@ -156,8 +172,7 @@ uint8_t start_capture(void) {
 	pio_capture_to_buffer(PIOA, g_image_buffer, (100000) >> 2);
 
 	/* Wait end of capture*/
-	while (!((PIOA->PIO_PCISR & PIO_PCIMR_RXBUFF) ==
-		PIO_PCIMR_RXBUFF)) {
+	while (!((PIOA->PIO_PCISR & PIO_PCIMR_RXBUFF) == PIO_PCIMR_RXBUFF)) {
 	}
 
 	/* Disable pio capture*/
@@ -165,32 +180,43 @@ uint8_t start_capture(void) {
 
 	/* Reset vsync flag*/
 	g_vsync_flag = false;
+	
+	if (find_image_len() == 1){
+		return 1;
+	}
+	else{
+		return 0;
+	}
 
 }
 
 
 uint8_t find_image_len(void) {
-	uint32_t soi_pos = 0, eoi_pos = 0;
-
+	uint32_t i = 0;
+	
 	// Find SOI marker
-	for (uint32_t i = 0; i < (100000) - 1; i++) {
-		if (g_image_buffer[i] == 0xFF && g_image_buffer[i+1] == 0xD8) {
+	while (i < 100000) {
+		if ((g_image_buffer[i] == 0xFF) && (g_image_buffer[i+1] == 0xD8)) {
 			soi_pos = i;
 			break;
 		}
+		i += 1;
 	}
 
 	// Find EOI marker
-	for (uint32_t i = soi_pos; i < (100000) - 1; i++) {
-		if (g_image_buffer[i] == 0xFF && g_image_buffer[i+1] == 0xD9) {
-			eoi_pos = i + 1;
+	while (i < 100000) {
+		if ((g_image_buffer[i-1] == 0xFF) && (g_image_buffer[i] == 0xD9)) {
+			eoi_pos = i;
 			break;
-			}
+		}
+		i += 1;
 	}
 
-	if (soi_pos < eoi_pos && eoi_pos > 0) {
-		return eoi_pos - soi_pos + 1;
+	if (i >= 100000){
+		return 0;
 	}
-
-	return 0;
+	
+	g_image_length = eoi_pos - soi_pos + 1;
+	
+	return 1;
 }

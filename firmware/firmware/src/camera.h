@@ -37,8 +37,21 @@
 #define CAMERA_RST_PIO         PIOA
 #define CAMERA_RST_ID          ID_PIOA
 #define CAMERA_RST_TYPE        PIO_OUTPUT_1
-#define CAMERA_DATA_BUS_PIO   PIOA
-#define CAMERA_DATA_FLAGS		(PIO_PULLUP | PIO_IT_RISE_EDGE)
+
+#define CAMERA_DATA_BUS_D0				PIO_PA24_IDX
+#define CAMERA_DATA_BUS_D1				PIO_PA25_IDX
+#define CAMERA_DATA_BUS_D2				PIO_PA26_IDX
+#define CAMERA_DATA_BUS_D3				PIO_PA27_IDX
+#define CAMERA_DATA_BUS_D4				PIO_PA28_IDX
+#define CAMERA_DATA_BUS_D5				PIO_PA29_IDX
+#define CAMERA_DATA_BUS_D6				PIO_PA30_IDX
+#define CAMERA_DATA_BUS_D7				PIO_PA31_IDX
+#define CAMERA_DATA_BUS_MASK			(0xFF000000UL)
+#define CAMERA_DATA_BUS_PIO				PIOA
+#define CAMERA_DATA_BUS_ID              ID_PIOA
+#define CAMERA_DATA_BUS_TYPE            PIO_INPUT
+#define CAMERA_DATA_BUS_ATTR            PIO_DEFAULT
+#define CAMERA_DATA_FLAGS				(PIO_INPUT | PIO_PULLUP)
 
 // TWI parameters
 #define BOARD_TWI              TWI0
@@ -73,9 +86,12 @@ uint8_t start_capture(void);
 uint8_t find_image_len(void);
 
 // Variable declarations
-volatile uint8_t g_vsync_flag;
-uint8_t g_image_buffer[];
+volatile uint32_t g_vsync_flag;
+volatile char g_image_buffer[100000];
 uint32_t g_image_length;
+
+volatile uint32_t soi_pos; // Index of start of image in buffer
+volatile uint32_t eoi_pos; // Index of end of image in buffer
 
 
 #endif /* CAMERA_H_ */

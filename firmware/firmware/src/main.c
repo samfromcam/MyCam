@@ -1,5 +1,5 @@
-#include "conf_board.h"
-#include "conf_clock.h"
+#include "config/conf_board.h"
+#include "config/conf_clock.h"
 #include "wifi.h"
 #include "camera.h"
 #include "timer_interface.h"
@@ -7,9 +7,11 @@
 #include <asf.h>
 
 int main(void) {
+	
 	// Initialize clock and board definitions
 	sysclk_init();
 	board_init();
+	wdt_disable(WDT);
 	
 	// Configure and start the Timer
 	configure_tc();
@@ -19,52 +21,59 @@ int main(void) {
 	configure_spi();
 	configure_wifi_comm_pin();
 	configure_wifi_provision_pin();
+	spi_peripheral_initialize();
 	
 	// Initialize and configure camera
 	init_camera();
 	configure_camera();
 	
-	// Reset WiFi and wait for connection
-	ioport_set_pin_level(WIFI_RESET, false);
-	delay_ms(100);
-	ioport_set_pin_level(WIFI_RESET, true);
-	
-	while (!ioport_get_pin_level(WIFI_GPIO_23)) { // Choose: connection pin 23
-		if (provision_flag) {
-			write_wifi_command("provision\r\n", 5);
-			provision_flag = 0;
-		}
-		delay_ms(1000);
-	}
+	// Test write_wifi_command
+	// write_wifi_command("ver\r\n", 5);
+	// Config indicators
+	write_wifi_command("set wlan_gpio 25\r\n", 5);
+ 	write_wifi_command("set websocket_gpio 26\r\n", 5);
+	write_wifi_command("set ap_gpio 27\r\n", 5);
+	// Config GPIOs
+	write_wifi_command("set comm_gpio 21\r\n", 5);
+	write_wifi_command("set clients_gpio 32\r\n", 5);
+	write_wifi_command("set net_gpio 22\r\n", 5);
+	// Set SPI baud rate
+	write_wifi_command("set spi_baud 100000\r\n", 5);
 	
 	// Send test command to WiFi module
-	while (1) {
+	while (!(success_flag == 1)) {
 		write_wifi_command("test\r\n", 10);
-		//
-		if (strstr((char*)input_line_wifi, "SUCCESS")) {
+		
+		if (success_flag == 1) {
 			break;
 		}
+		
 		ioport_set_pin_level(WIFI_RESET, false);
 		delay_ms(100);
 		ioport_set_pin_level(WIFI_RESET, true);
 		delay_ms(10000);
 	}
 	
-	// Main loop
-	while (1) {
-		// Check for provisioning request
-		if (provision_flag) {
+	while (1){
+		if (provision_flag){
 			write_wifi_command("provision\r\n", 5);
-			provision_flag = 0;
-		}
-		
-		// Take picture if network available and clients connected
-		if (ioport_get_pin_level(WIFI_GPIO_23) && ioport_get_pin_level(WIFI_GPIO_32)) {
-			if (start_capture()) {
-				write_image_to_web();
+			provision_flag = false;
+			while (!ioport_get_pin_level(WIFI_GPIO_22)){ // check network pin
 			}
+			continue;
 		}
 		
-		delay_ms(100);
+// 		bool network_pin_level = ioport_get_pin_level(WIFI_GPIO_22);
+// 		if (!ioport_get_pin_level(WIFI_GPIO_22)){ // check network pin
+//			continue;
+//		}
+//		
+//		if (!ioport_get_pin_level(WIFI_GPIO_32)){ // check clients pin
+//			continue;
+//		}
+			
+		if (start_capture()){
+			write_image_to_web();
+		}
 	}
 }

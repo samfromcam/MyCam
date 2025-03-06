@@ -1,9 +1,9 @@
-T8B5C 2851:886.848   SEGGER J-Link V8.12a Log File
-T8B5C 2851:888.896   DLL Compiled: Jan  9 2025 14:34:24
-T8B5C 2851:889.920   Logging started @ 2025-03-05 21:59
-T8B5C 2851:890.688   Process: C:\Program Files (x86)\Atmel\Studio\7.0\atbackend\atbackend.exe
-T8B5C 2851:891.456 - 96.996ms 
-T8B5C 2851:899.648 JLINK_Close()
-T8B5C 2851:911.424 - 11.988ms
-T8B5C 2851:913.216   
-T8B5C 2851:914.240   Closed
+TB304 25560:363.008   SEGGER J-Link V8.12a Log File
+TB304 25560:363.008   DLL Compiled: Jan  9 2025 14:34:24
+TB304 25560:363.008   Logging started @ 2025-03-06 22:29
+TB304 25560:363.008   Process: C:\Program Files (x86)\Atmel\Studio\7.0\atbackend\atbackend.exe
+TB304 25560:363.008 - 63.717ms 
+TB304 25560:373.248 JLINK_Close()
+TB304 25560:379.392 - 7.223ms
+TB304 25560:379.392   
+TB304 25560:381.440   Closed
