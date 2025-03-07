@@ -79,7 +79,7 @@ void wifi_spi_handler(void) {
 		spi_read(SPI, &data, &uc_pcs);
 		
 		if (transfer_len--) {
-			spi_write(SPI, transfer_index++, 0, 0);
+			spi_write(SPI, g_image_buffer[transfer_index++], 0, 0);
 		}
 	}
 }
@@ -210,7 +210,7 @@ void write_image_to_web(void) { //
 	
 	prepare_spi_transfer();
 	uint8_t transfer_message[100];
-	sprintf(transfer_message, "image transfer %i\r\n", g_image_length);
+	sprintf(transfer_message, "image_test %i\r\n", g_image_length); // image_transfer, replaced for testing
 	write_wifi_command(transfer_message,5);		
 	
 }

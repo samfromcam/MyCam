@@ -7,7 +7,6 @@
 #include <asf.h>
 
 int main(void) {
-	
 	// Initialize clock and board definitions
 	sysclk_init();
 	board_init();
@@ -32,6 +31,7 @@ int main(void) {
 	// Config indicators
 	write_wifi_command("set wlan_gpio 25\r\n", 5);
  	write_wifi_command("set websocket_gpio 26\r\n", 5);
+	 write_wifi_command("get mac\r\n", 5);
 	write_wifi_command("set ap_gpio 27\r\n", 5);
 	// Config GPIOs
 	write_wifi_command("set comm_gpio 21\r\n", 5);
@@ -39,6 +39,7 @@ int main(void) {
 	write_wifi_command("set net_gpio 22\r\n", 5);
 	// Set SPI baud rate
 	write_wifi_command("set spi_baud 100000\r\n", 5);
+	
 	
 	// Send test command to WiFi module
 	while (!(success_flag == 1)) {
@@ -63,15 +64,15 @@ int main(void) {
 			continue;
 		}
 		
-// 		bool network_pin_level = ioport_get_pin_level(WIFI_GPIO_22);
-// 		if (!ioport_get_pin_level(WIFI_GPIO_22)){ // check network pin
-//			continue;
-//		}
-//		
-//		if (!ioport_get_pin_level(WIFI_GPIO_32)){ // check clients pin
-//			continue;
-//		}
-			
+		bool network_pin_level = ioport_get_pin_level(WIFI_GPIO_22);
+					if (!ioport_get_pin_level(WIFI_GPIO_22)){ // check network pin
+						continue;
+					}
+					
+					if (!ioport_get_pin_level(WIFI_GPIO_32)){ // check clients pin
+						continue;
+					}
+						
 		if (start_capture()){
 			write_image_to_web();
 		}
