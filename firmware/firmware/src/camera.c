@@ -71,11 +71,11 @@ void pio_capture_init(Pio *p_pio, uint32_t ul_id) {
 	p_pio->PIO_PCMR &= ~((uint32_t)PIO_PCMR_ALWYS);
 	p_pio->PIO_PCMR &= ~((uint32_t)PIO_PCMR_HALFS);
 
-	#if !defined(DEFAULT_MODE_COLORED)
-		/* Samples only data with even index */
-		p_pio->PIO_PCMR |= PIO_PCMR_HALFS;
-		p_pio->PIO_PCMR &= ~((uint32_t)PIO_PCMR_FRSTS);
-	#endif
+// 	#if !defined(DEFAULT_MODE_COLORED)
+// 		/* Samples only data with even index */
+// 		p_pio->PIO_PCMR |= PIO_PCMR_HALFS;
+// 		p_pio->PIO_PCMR &= ~((uint32_t)PIO_PCMR_FRSTS);
+// 	#endif
 }
 
 uint8_t pio_capture_to_buffer(Pio *p_pio, uint8_t *uc_buf, uint32_t ul_size){

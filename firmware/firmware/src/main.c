@@ -31,7 +31,7 @@ int main(void) {
 	// Config indicators
 	write_wifi_command("set wlan_gpio 25\r\n", 5);
  	write_wifi_command("set websocket_gpio 26\r\n", 5);
-	 write_wifi_command("get mac\r\n", 5);
+	write_wifi_command("get mac\r\n", 5);
 	write_wifi_command("set ap_gpio 27\r\n", 5);
 	// Config GPIOs
 	write_wifi_command("set comm_gpio 21\r\n", 5);

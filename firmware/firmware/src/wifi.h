@@ -89,7 +89,7 @@ GPIOs 19 (SPCK), 17 (MISO), 18 (MOSI), and 16 (CS) of the WIFI to PA14, PA12, PA
 // clock polarity:
 #define SPI_CLK_POLARITY 0
 // clock phase:
-#define SPI_CLK_PHASE 0//1
+#define SPI_CLK_PHASE 1//1
 // delay before SPCK:
 #define SPI_DLYBS 0x40
 // delay between consecutive transfers:
@@ -130,7 +130,7 @@ void process_incoming_byte_wifi(uint8_t in_byte);
 void wifi_command_response_handler(uint32_t ul_id, uint32_t ul_mask);
 void process_data_wifi(void);
 void wifi_provision_handler(uint32_t ul_id, uint32_t ul_mask);
-void wifi_spi_handler(void);
+void SPI_Handler(void);
 void configure_usart_wifi(void);
 void configure_wifi_comm_pin(void);
 void configure_wifi_provision_pin(void);

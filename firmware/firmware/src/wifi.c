@@ -69,7 +69,7 @@ void wifi_provision_handler(uint32_t ul_id, uint32_t ul_mask) { //
 	provision_flag = 1;
 }
 
-void wifi_spi_handler(void) {
+void SPI_Handler(void) {
 	// Handler for peripheral mode interrupts on SPI bus. When the ESP32 SPI controller requests data, this interrupt should send one byte of the image at a time.
 	uint32_t new_cmd = 0;
 	static uint16_t data;
@@ -210,7 +210,7 @@ void write_image_to_web(void) { //
 	
 	prepare_spi_transfer();
 	uint8_t transfer_message[100];
-	sprintf(transfer_message, "image_test %i\r\n", g_image_length); // image_transfer, replaced for testing
+	sprintf(transfer_message, "image_transfer %i\r\n", g_image_length); // use image_test for testing
 	write_wifi_command(transfer_message,5);		
 	
 }
