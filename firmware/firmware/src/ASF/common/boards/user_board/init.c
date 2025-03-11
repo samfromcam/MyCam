@@ -25,4 +25,5 @@ void board_init(void)
 	ioport_set_pin_dir(WIFI_GPIO_22, IOPORT_DIR_INPUT); // network pin
 	ioport_set_pin_dir(WIFI_GPIO_32, IOPORT_DIR_INPUT); // client pin
 	ioport_set_pin_dir(WIFI_RESET, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(WIFI_RESET, true);
 }

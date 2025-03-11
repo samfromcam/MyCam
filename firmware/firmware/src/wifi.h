@@ -31,7 +31,7 @@ GPIOs 19 (SPCK), 17 (MISO), 18 (MOSI), and 16 (CS) of the WIFI to PA14, PA12, PA
 #include <camera.h>
 #include "config/conf_board.h"
 
-// WIFI control pins:
+// WIFI control pins: (commented because defined in conf_board)
 // #define COMM_GPIO_PIN_NUM		PIO_PA21_IDX
 // #define CLIENTS_GPIO_PIN_NUM	PIO_PA8_IDX
 // #define NET_GPIO_PIN_NUM		PIO_PA22_IDX
@@ -106,7 +106,6 @@ GPIOs 19 (SPCK), 17 (MISO), 18 (MOSI), and 16 (CS) of the WIFI to PA14, PA12, PA
 #define WIFI_COMM_PIN_NUM			PIO_PA21
 #define WIFI_COMM_PIO				PIOA
 #define WIFI_COMM_ID				ID_PIOA
-#define WIFI_COMM_MASK				PIO_PA21_IDX
 #define WIFI_COMM_ATTR				PIO_IT_RISE_EDGE
 
 // WIFI variable definitions:

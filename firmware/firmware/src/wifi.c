@@ -12,7 +12,7 @@
 volatile uint32_t received_byte_wifi = 0;
 volatile uint8_t new_rx_wifi = 0;
 volatile uint32_t input_pos_wifi = 0;
-volatile uint8_t wifi_comm_success = false; // comm data received flag
+volatile uint8_t wifi_comm_success = 0; // comm data received flag
 
 volatile uint32_t transfer_index = 0;
 volatile uint32_t transfer_len = 0;

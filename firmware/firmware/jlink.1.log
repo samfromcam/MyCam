@@ -1,0 +1,9 @@
+T827C 8054:705.152   SEGGER J-Link V8.12a Log File
+T827C 8054:706.176   DLL Compiled: Jan  9 2025 14:34:24
+T827C 8054:707.200   Logging started @ 2025-03-11 18:28
+T827C 8054:707.200   Process: C:\Program Files (x86)\Atmel\Studio\7.0\atbackend\atbackend.exe
+T827C 8054:707.712 - 104.838ms 
+T827C 8054:712.832 JLINK_Close()
+T827C 8054:744.064 - 31.279ms
+T827C 8054:744.576   
+T827C 8054:745.600   Closed

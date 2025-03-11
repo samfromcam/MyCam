@@ -5902,7 +5902,7 @@ Discarded input sections
  .debug_macro   0x00000000      0x401 src/main.o
  .debug_macro   0x00000000       0x10 src/main.o
  .debug_macro   0x00000000      0x100 src/main.o
- .debug_macro   0x00000000      0x124 src/main.o
+ .debug_macro   0x00000000      0x11e src/main.o
  .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc.a(lib_a-exit.o)
  .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc.a(lib_a-exit.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/arm/arm-gnu-toolchain/bin/../lib/gcc/arm-none-eabi/6.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m\libc.a(lib_a-exit.o)
@@ -7096,7 +7096,7 @@ OUTPUT(firmware.elf elf32-littlearm)
  .comment       0x00000059       0x5a src/ASF/sam/utils/syscalls/gcc/syscalls.o
  .comment       0x00000059       0x5a src/main.o
 
-.debug_info     0x00000000    0x1982b
+.debug_info     0x00000000    0x198dd
  .debug_info    0x00000000     0x12c2 src/ASF/common/services/clock/sam4s/sysclk.o
  .debug_info    0x000012c2      0xa45 src/ASF/common/services/delay/sam/cycle_counter.o
  .debug_info    0x00001d07     0x221d src/ASF/sam/drivers/pio/pio.o
@@ -7112,11 +7112,11 @@ OUTPUT(firmware.elf elf32-littlearm)
  .debug_info    0x000113b6      0xc72 src/camera_helper/ov2640_table_registers.o
  .debug_info    0x00012028     0x1080 src/timer_interface.o
  .debug_info    0x000130a8     0x24c2 src/wifi.o
- .debug_info    0x0001556a     0x1223 src/ASF/common/boards/user_board/init.o
- .debug_info    0x0001678d      0x6d2 src/ASF/sam/utils/cmsis/sam4s/source/templates/gcc/startup_sam4s.o
- .debug_info    0x00016e5f      0x458 src/ASF/sam/utils/cmsis/sam4s/source/templates/system_sam4s.o
- .debug_info    0x000172b7      0xdb0 src/ASF/sam/utils/syscalls/gcc/syscalls.o
- .debug_info    0x00018067     0x17c4 src/main.o
+ .debug_info    0x0001556a     0x12d5 src/ASF/common/boards/user_board/init.o
+ .debug_info    0x0001683f      0x6d2 src/ASF/sam/utils/cmsis/sam4s/source/templates/gcc/startup_sam4s.o
+ .debug_info    0x00016f11      0x458 src/ASF/sam/utils/cmsis/sam4s/source/templates/system_sam4s.o
+ .debug_info    0x00017369      0xdb0 src/ASF/sam/utils/syscalls/gcc/syscalls.o
+ .debug_info    0x00018119     0x17c4 src/main.o
 
 .debug_abbrev   0x00000000     0x39ff
  .debug_abbrev  0x00000000      0x333 src/ASF/common/services/clock/sam4s/sysclk.o
@@ -7140,7 +7140,7 @@ OUTPUT(firmware.elf elf32-littlearm)
  .debug_abbrev  0x00003434      0x264 src/ASF/sam/utils/syscalls/gcc/syscalls.o
  .debug_abbrev  0x00003698      0x367 src/main.o
 
-.debug_loc      0x00000000     0x591a
+.debug_loc      0x00000000     0x5942
  .debug_loc     0x00000000      0x1d9 src/ASF/common/services/clock/sam4s/sysclk.o
  .debug_loc     0x000001d9      0xdef src/ASF/sam/drivers/pio/pio.o
  .debug_loc     0x00000fc8      0x531 src/ASF/sam/drivers/pio/pio_handler.o
@@ -7154,10 +7154,10 @@ OUTPUT(firmware.elf elf32-littlearm)
  .debug_loc     0x000047da      0x9a9 src/camera_helper/ov2640.o
  .debug_loc     0x00005183       0x6c src/timer_interface.o
  .debug_loc     0x000051ef      0x40d src/wifi.o
- .debug_loc     0x000055fc       0xc0 src/ASF/common/boards/user_board/init.o
- .debug_loc     0x000056bc       0xa1 src/ASF/sam/utils/cmsis/sam4s/source/templates/gcc/startup_sam4s.o
- .debug_loc     0x0000575d       0xfd src/ASF/sam/utils/syscalls/gcc/syscalls.o
- .debug_loc     0x0000585a       0xc0 src/main.o
+ .debug_loc     0x000055fc       0xe8 src/ASF/common/boards/user_board/init.o
+ .debug_loc     0x000056e4       0xa1 src/ASF/sam/utils/cmsis/sam4s/source/templates/gcc/startup_sam4s.o
+ .debug_loc     0x00005785       0xfd src/ASF/sam/utils/syscalls/gcc/syscalls.o
+ .debug_loc     0x00005882       0xc0 src/main.o
 
 .debug_aranges  0x00000000      0xb78
  .debug_aranges
@@ -7222,7 +7222,7 @@ OUTPUT(firmware.elf elf32-littlearm)
  .debug_ranges  0x00000a18       0x50 src/ASF/sam/utils/syscalls/gcc/syscalls.o
  .debug_ranges  0x00000a68       0x40 src/main.o
 
-.debug_macro    0x00000000    0x15de6
+.debug_macro    0x00000000    0x15de0
  .debug_macro   0x00000000      0x56d src/ASF/common/services/clock/sam4s/sysclk.o
  .debug_macro   0x0000056d      0x8c8 src/ASF/common/services/clock/sam4s/sysclk.o
  .debug_macro   0x00000e35      0x71d src/ASF/common/services/clock/sam4s/sysclk.o
@@ -7372,23 +7372,23 @@ OUTPUT(firmware.elf elf32-littlearm)
  .debug_macro   0x000139a7      0x6a0 src/wifi.o
  .debug_macro   0x00014047       0x10 src/wifi.o
  .debug_macro   0x00014057      0x100 src/wifi.o
- .debug_macro   0x00014157      0x124 src/wifi.o
- .debug_macro   0x0001427b      0x645 src/ASF/common/boards/user_board/init.o
- .debug_macro   0x000148c0      0x2f4 src/ASF/sam/utils/cmsis/sam4s/source/templates/gcc/startup_sam4s.o
- .debug_macro   0x00014bb4      0x2fc src/ASF/sam/utils/cmsis/sam4s/source/templates/system_sam4s.o
- .debug_macro   0x00014eb0      0x1d6 src/ASF/sam/utils/syscalls/gcc/syscalls.o
- .debug_macro   0x00015086       0x97 src/ASF/sam/utils/syscalls/gcc/syscalls.o
- .debug_macro   0x0001511d      0x353 src/ASF/sam/utils/syscalls/gcc/syscalls.o
- .debug_macro   0x00015470       0xf6 src/ASF/sam/utils/syscalls/gcc/syscalls.o
- .debug_macro   0x00015566       0x4c src/ASF/sam/utils/syscalls/gcc/syscalls.o
- .debug_macro   0x000155b2       0x16 src/ASF/sam/utils/syscalls/gcc/syscalls.o
- .debug_macro   0x000155c8       0x10 src/ASF/sam/utils/syscalls/gcc/syscalls.o
- .debug_macro   0x000155d8       0x10 src/ASF/sam/utils/syscalls/gcc/syscalls.o
- .debug_macro   0x000155e8       0x35 src/ASF/sam/utils/syscalls/gcc/syscalls.o
- .debug_macro   0x0001561d      0x122 src/ASF/sam/utils/syscalls/gcc/syscalls.o
- .debug_macro   0x0001573f      0x6a7 src/main.o
+ .debug_macro   0x00014157      0x11e src/wifi.o
+ .debug_macro   0x00014275      0x645 src/ASF/common/boards/user_board/init.o
+ .debug_macro   0x000148ba      0x2f4 src/ASF/sam/utils/cmsis/sam4s/source/templates/gcc/startup_sam4s.o
+ .debug_macro   0x00014bae      0x2fc src/ASF/sam/utils/cmsis/sam4s/source/templates/system_sam4s.o
+ .debug_macro   0x00014eaa      0x1d6 src/ASF/sam/utils/syscalls/gcc/syscalls.o
+ .debug_macro   0x00015080       0x97 src/ASF/sam/utils/syscalls/gcc/syscalls.o
+ .debug_macro   0x00015117      0x353 src/ASF/sam/utils/syscalls/gcc/syscalls.o
+ .debug_macro   0x0001546a       0xf6 src/ASF/sam/utils/syscalls/gcc/syscalls.o
+ .debug_macro   0x00015560       0x4c src/ASF/sam/utils/syscalls/gcc/syscalls.o
+ .debug_macro   0x000155ac       0x16 src/ASF/sam/utils/syscalls/gcc/syscalls.o
+ .debug_macro   0x000155c2       0x10 src/ASF/sam/utils/syscalls/gcc/syscalls.o
+ .debug_macro   0x000155d2       0x10 src/ASF/sam/utils/syscalls/gcc/syscalls.o
+ .debug_macro   0x000155e2       0x35 src/ASF/sam/utils/syscalls/gcc/syscalls.o
+ .debug_macro   0x00015617      0x122 src/ASF/sam/utils/syscalls/gcc/syscalls.o
+ .debug_macro   0x00015739      0x6a7 src/main.o
 
-.debug_line     0x00000000     0xf91e
+.debug_line     0x00000000     0xf921
  .debug_line    0x00000000      0xbc8 src/ASF/common/services/clock/sam4s/sysclk.o
  .debug_line    0x00000bc8      0xa3f src/ASF/common/services/delay/sam/cycle_counter.o
  .debug_line    0x00001607      0xee8 src/ASF/sam/drivers/pio/pio.o
@@ -7404,13 +7404,13 @@ OUTPUT(firmware.elf elf32-littlearm)
  .debug_line    0x00009c7f      0xbfb src/camera_helper/ov2640_table_registers.o
  .debug_line    0x0000a87a      0xea1 src/timer_interface.o
  .debug_line    0x0000b71b     0x103f src/wifi.o
- .debug_line    0x0000c75a      0xe47 src/ASF/common/boards/user_board/init.o
- .debug_line    0x0000d5a1      0x80c src/ASF/sam/utils/cmsis/sam4s/source/templates/gcc/startup_sam4s.o
- .debug_line    0x0000ddad      0x83d src/ASF/sam/utils/cmsis/sam4s/source/templates/system_sam4s.o
- .debug_line    0x0000e5ea      0x40b src/ASF/sam/utils/syscalls/gcc/syscalls.o
- .debug_line    0x0000e9f5      0xf29 src/main.o
+ .debug_line    0x0000c75a      0xe4a src/ASF/common/boards/user_board/init.o
+ .debug_line    0x0000d5a4      0x80c src/ASF/sam/utils/cmsis/sam4s/source/templates/gcc/startup_sam4s.o
+ .debug_line    0x0000ddb0      0x83d src/ASF/sam/utils/cmsis/sam4s/source/templates/system_sam4s.o
+ .debug_line    0x0000e5ed      0x40b src/ASF/sam/utils/syscalls/gcc/syscalls.o
+ .debug_line    0x0000e9f8      0xf29 src/main.o
 
-.debug_str      0x00000000    0x52479
+.debug_str      0x00000000    0x5245d
  .debug_str     0x00000000    0x4b97d src/ASF/common/services/clock/sam4s/sysclk.o
                               0x4bd8e (size before relaxing)
  .debug_str     0x0004b97d      0x1a9 src/ASF/common/services/delay/sam/cycle_counter.o
@@ -7439,18 +7439,18 @@ OUTPUT(firmware.elf elf32-littlearm)
                               0x4d6c7 (size before relaxing)
  .debug_str     0x00050d88       0x5f src/timer_interface.o
                               0x4cc35 (size before relaxing)
- .debug_str     0x00050de7      0x8ac src/wifi.o
-                              0x4f6cd (size before relaxing)
- .debug_str     0x00051693      0x136 src/ASF/common/boards/user_board/init.o
-                              0x4cbfc (size before relaxing)
- .debug_str     0x000517c9      0x428 src/ASF/sam/utils/cmsis/sam4s/source/templates/gcc/startup_sam4s.o
+ .debug_str     0x00050de7      0x890 src/wifi.o
+                              0x4f6b1 (size before relaxing)
+ .debug_str     0x00051677      0x150 src/ASF/common/boards/user_board/init.o
+                              0x4cc31 (size before relaxing)
+ .debug_str     0x000517c7      0x428 src/ASF/sam/utils/cmsis/sam4s/source/templates/gcc/startup_sam4s.o
                               0x3a1f9 (size before relaxing)
- .debug_str     0x00051bf1       0xb9 src/ASF/sam/utils/cmsis/sam4s/source/templates/system_sam4s.o
+ .debug_str     0x00051bef       0xb9 src/ASF/sam/utils/cmsis/sam4s/source/templates/system_sam4s.o
                               0x39f9e (size before relaxing)
- .debug_str     0x00051caa      0x77b src/ASF/sam/utils/syscalls/gcc/syscalls.o
+ .debug_str     0x00051ca8      0x77b src/ASF/sam/utils/syscalls/gcc/syscalls.o
                                0x73fe (size before relaxing)
- .debug_str     0x00052425       0x54 src/main.o
-                              0x4effe (size before relaxing)
+ .debug_str     0x00052423       0x3a src/main.o
+                              0x4efe2 (size before relaxing)
 
 .debug_frame    0x00000000     0x25c0
  .debug_frame   0x00000000       0x88 src/ASF/common/services/clock/sam4s/sysclk.o

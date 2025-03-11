@@ -17,23 +17,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   6 .comment      00000059  00000000  00000000  000209ea  2**0
                   CONTENTS, READONLY
-  7 .debug_info   0001982b  00000000  00000000  00020a43  2**0
+  7 .debug_info   000198dd  00000000  00000000  00020a43  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_abbrev 000039ff  00000000  00000000  0003a26e  2**0
+  8 .debug_abbrev 000039ff  00000000  00000000  0003a320  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_loc    0000591a  00000000  00000000  0003dc6d  2**0
+  9 .debug_loc    00005942  00000000  00000000  0003dd1f  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_aranges 00000b78  00000000  00000000  00043587  2**0
+ 10 .debug_aranges 00000b78  00000000  00000000  00043661  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000aa8  00000000  00000000  000440ff  2**0
+ 11 .debug_ranges 00000aa8  00000000  00000000  000441d9  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_macro  00015de6  00000000  00000000  00044ba7  2**0
+ 12 .debug_macro  00015de0  00000000  00000000  00044c81  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_line   0000f91e  00000000  00000000  0005a98d  2**0
+ 13 .debug_line   0000f921  00000000  00000000  0005aa61  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_str    00052479  00000000  00000000  0006a2ab  2**0
+ 14 .debug_str    0005245d  00000000  00000000  0006a382  2**0
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_frame  000025c0  00000000  00000000  000bc724  2**2
+ 15 .debug_frame  000025c0  00000000  00000000  000bc7e0  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -3953,8 +3953,14 @@ void board_init(void)
   4015f2:	611a      	str	r2, [r3, #16]
 	base->PIO_OWER = arch_ioport_pin_to_mask(pin);
   4015f4:	f8c3 20a0 	str.w	r2, [r3, #160]	; 0xa0
-  4015f8:	bd10      	pop	{r4, pc}
-  4015fa:	bf00      	nop
+		bool level)
+{
+	Pio *base = arch_ioport_pin_to_base(pin);
+
+	if (level) {
+		base->PIO_SODR = arch_ioport_pin_to_mask(pin);
+  4015f8:	631a      	str	r2, [r3, #48]	; 0x30
+  4015fa:	bd10      	pop	{r4, pc}
   4015fc:	00400649 	.word	0x00400649
   401600:	400e0e00 	.word	0x400e0e00
 
@@ -4439,10 +4445,6 @@ int main(void) {
   4018dc:	d01b      	beq.n	401916 <main+0xa6>
 		write_wifi_command("test\r\n", 10);
   4018de:	4f34      	ldr	r7, [pc, #208]	; (4019b0 <main+0x140>)
-	Pio *base = arch_ioport_pin_to_base(pin);
-
-	if (level) {
-		base->PIO_SODR = arch_ioport_pin_to_mask(pin);
 	} else {
 		base->PIO_CODR = arch_ioport_pin_to_mask(pin);
   4018e0:	4c34      	ldr	r4, [pc, #208]	; (4019b4 <main+0x144>)
